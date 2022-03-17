@@ -5,7 +5,7 @@ const express = require('express')
 
 const dataService = require('./Services/data.service')
 
-// create an app using express
+// create an application using express
 const app = express()
 
 // To parse json
@@ -37,6 +37,14 @@ app.delete('/', (req, res) => {
     res.send("IT'S A DELETE METHOD lalala...")
 })
 
+// Application specific Middleware
+const appMiddleware = (req, res, next) => {
+    console.log("Application specific middleware");
+    next();
+}
+
+app.use(appMiddleware)
+
 // Bank app - API  
 // register - API
 app.post('/register', (req, res) => {
@@ -55,6 +63,19 @@ app.post('/login', (req, res) => {
 // deposit - API
 app.post('/deposit', (req, res) => {
     const result = dataService.deposit(req.body.acno, req.body.pswd, req.body.amount)
+    // we need to convert the result to json format because frontend read json format only
+    res.status(result.statusCode).json(result)
+})
+// Withdraw - API
+app.post('/withdraw', (req, res) => {
+    const result = dataService.withdraw(req.body.acno, req.body.pswd, req.body.amount)
+    // we need to convert the result to json format because frontend read json format only
+    res.status(result.statusCode).json(result)
+})
+
+// transcation - API
+app.post('/transcation', (req, res) => {
+    const result = dataService.getTranscation(req.body.acno)
     // we need to convert the result to json format because frontend read json format only
     res.status(result.statusCode).json(result)
 })

@@ -95,10 +95,72 @@ const deposit = (acno, pswd, amount) => {
 
     }
 }
+//  withdraw definition
+const withdraw = (acno, pswd, amount) => {
+
+    let amt = parseInt(amount)
+
+    if (acno in database) {
+        if (pswd == database[acno]["password"]) {
+            if (database[acno]["balance"] > amt) {
+                database[acno]["balance"] -= amount
+                database[acno]["transcation"].push({
+                    amt: amount,
+                    type: "DEBIT"
+                })
+                // console.log(database[acno]["transcation"]);
+                console.log(database);
+                return {
+                    statusCode: 200,
+                    status: true,
+                    message: amount + " is Successfully debited.. new balance is " + database[acno]["balance"]
+                }
+            } else {
+                return {
+                    statusCode: 422,
+                    status: false,
+                    message: "Insufficent Balance.."
+                }
+            }
+        } else {
+            return {
+                statusCode: 422,
+                status: false,
+                message: "Incorrect password"
+            }
+        }
+    } else {
+        return {
+            statusCode: 422,
+            status: false,
+            message: "User does not exist"
+        }
+
+    }
+}
+
+// Transcation definition
+const getTranscation = (acno) => {
+    if (acno in database) {
+        return {
+            statusCode: 200,
+            status: true,
+            transcation: database[acno]["transcation"]
+        }
+    } else {
+        return {
+            statusCode: 422,
+            status: false,
+            message: "User does not exist"
+        }
+    }
+}
 
 // In nodeJs we are not using class concept so we are exporting functions here 
 module.exports = {
     register,
     login,
-    deposit
+    deposit,
+    withdraw,
+    getTranscation
 }
