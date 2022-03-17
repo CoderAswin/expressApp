@@ -1,0 +1,33 @@
+Server creation
+
+codes
+
+1. Create package.json - npm init
+
+2. Install express - npm i express
+
+3. To run Server - node index.js
+(Changes are not automatically reflect in node so we need to recompile the application then go to browser and reload.This process is very difficult so we introduced new method nodemon(we not need recompile the server again and again))
+
+4. To install nodemon - npm i -g nodemon                  (-g means global)
+
+steps
+
+1. Create folder
+
+2. 
+
+3. Install express
+
+4. create index.js file
+Then import express to this file(Insted of express we are using require)
+
+5. import express in index.js
+
+6. create an app using express
+
+7. set up the port number
+
+8. Resolve the http request
+
+9. Run the Server
