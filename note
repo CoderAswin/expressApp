@@ -1,0 +1,11 @@
+express/nodejs
+
+commands
+
+1.npm init => create package.json => hold 3rd party library
+
+2.install express = > npm i express
+
+3.run server => node index.js
+
+4.to install nodemon => npm i -g nodemon =>to automatically recompile server
