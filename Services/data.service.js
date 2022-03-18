@@ -1,3 +1,6 @@
+// import jsonwebtoken
+const jwt = require('jsonwebtoken')
+
 database = {
     1000: { acno: 1000, uname: "Akash", password: 2000, balance: 5000, transcation: [] },
     1001: { acno: 1001, uname: "Najad", password: 1001, balance: 1000, transcation: [] },
@@ -39,12 +42,18 @@ const login = (acno, password) => {
         if (password == database[acno]["password"]) {
             currentAcno = acno
             currentUserName = database[acno]["uname"]
+            // token generation
+            const token = jwt.sign({
+                currentAcno: acno
+            }, 'scret123')
+            console.log(token);
             return {
                 statusCode: 200,
                 status: true,
                 message: "Successfully Log In",
                 currentAcno,
-                currentUserName
+                currentUserName,
+                token
             }
         } else {
             return {

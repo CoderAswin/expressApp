@@ -1,6 +1,7 @@
 Server creation
 
 codes
+===========
 
 1. Create package.json - npm init
 
@@ -11,7 +12,10 @@ codes
 
 4. To install nodemon - npm i -g nodemon                  (-g means global)
 
+5. Install jsomwebtoken
+
 steps
+=========
 
 1. Create folder
 
@@ -37,3 +41,11 @@ Then import express to this file(Insted of express we are using require)
 11. Middleware - (req,res,next)=> {}   (If a middleware in our project then it will execute first even we give register response)
 
     11.1 Application specific middleware (using application specific middleware we can execute one function before executing other function)
+
+    11.2 Router specific Middleware (It execute only specified request)
+
+12. JWT Token - To authentication
+
+    12.1 Token generation - sign()
+
+    12.2 Token validation - verify()    

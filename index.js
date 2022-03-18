@@ -1,6 +1,7 @@
+// import jwtweb token
+const jwt = require('jsonwebtoken')
+
 // Import express
-
-
 const express = require('express')
 
 const dataService = require('./Services/data.service')
@@ -42,8 +43,25 @@ const appMiddleware = (req, res, next) => {
     console.log("Application specific middleware");
     next();
 }
-
 app.use(appMiddleware)
+
+// to verify token - middleware
+const jwtMiddleware = (req, res, next) => {
+    try {
+        const token = req.headers["x-access-token"]
+        // varify token
+        const data = jwt.verify(token, 'scret123')
+        req.currentAcno = data.currentAcno
+        next()
+    }
+    catch {
+        res.status(422).json({
+            statusCode: 422,
+            status: false,
+            message: "please log in"
+        })
+    }
+}
 
 // Bank app - API  
 // register - API
@@ -61,20 +79,20 @@ app.post('/login', (req, res) => {
 })
 
 // deposit - API
-app.post('/deposit', (req, res) => {
+app.post('/deposit', jwtMiddleware, (req, res) => {
     const result = dataService.deposit(req.body.acno, req.body.pswd, req.body.amount)
     // we need to convert the result to json format because frontend read json format only
     res.status(result.statusCode).json(result)
 })
 // Withdraw - API
-app.post('/withdraw', (req, res) => {
+app.post('/withdraw', jwtMiddleware, (req, res) => {
     const result = dataService.withdraw(req.body.acno, req.body.pswd, req.body.amount)
     // we need to convert the result to json format because frontend read json format only
     res.status(result.statusCode).json(result)
 })
 
 // transcation - API
-app.post('/transcation', (req, res) => {
+app.post('/transcation', jwtMiddleware, (req, res) => {
     const result = dataService.getTranscation(req.body.acno)
     // we need to convert the result to json format because frontend read json format only
     res.status(result.statusCode).json(result)
