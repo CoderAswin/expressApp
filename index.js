@@ -86,7 +86,7 @@ app.post('/deposit', jwtMiddleware, (req, res) => {
 })
 // Withdraw - API
 app.post('/withdraw', jwtMiddleware, (req, res) => {
-    const result = dataService.withdraw(req.body.acno, req.body.pswd, req.body.amount)
+    const result = dataService.withdraw(req, req.body.acno, req.body.pswd, req.body.amount)
     // we need to convert the result to json format because frontend read json format only
     res.status(result.statusCode).json(result)
 })

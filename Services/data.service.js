@@ -105,32 +105,42 @@ const deposit = (acno, pswd, amount) => {
     }
 }
 //  withdraw definition
-const withdraw = (acno, pswd, amount) => {
+const withdraw = (req, acno, pswd, amount) => {
 
     let amt = parseInt(amount)
-
+    var currentAcno = req.currentAcno
     if (acno in database) {
         if (pswd == database[acno]["password"]) {
-            if (database[acno]["balance"] > amt) {
-                database[acno]["balance"] -= amount
-                database[acno]["transcation"].push({
-                    amt: amount,
-                    type: "DEBIT"
-                })
-                // console.log(database[acno]["transcation"]);
-                console.log(database);
-                return {
-                    statusCode: 200,
-                    status: true,
-                    message: amount + " is Successfully debited.. new balance is " + database[acno]["balance"]
+            if (currentAcno == acno) {
+                if (database[acno]["balance"] > amt) {
+                    database[acno]["balance"] -= amount
+                    database[acno]["transcation"].push({
+                        amt: amount,
+                        type: "DEBIT"
+                    })
+                    // console.log(database[acno]["transcation"]);
+                    console.log(database);
+                    return {
+                        statusCode: 200,
+                        status: true,
+                        message: amount + " is Successfully debited.. new balance is " + database[acno]["balance"]
+                    }
+                } else {
+                    return {
+                        statusCode: 422,
+                        status: false,
+                        message: "Insufficent Balance.."
+                    }
                 }
             } else {
                 return {
                     statusCode: 422,
                     status: false,
-                    message: "Insufficent Balance.."
+                    message: "Operation denied.."
                 }
+
             }
+
         } else {
             return {
                 statusCode: 422,
