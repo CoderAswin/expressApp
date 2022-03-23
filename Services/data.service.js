@@ -1,6 +1,10 @@
 // import jsonwebtoken
 const jwt = require('jsonwebtoken')
 
+const db = require("./db")
+
+
+
 database = {
     1000: { acno: 1000, uname: "Akash", password: 2000, balance: 5000, transcation: [] },
     1001: { acno: 1001, uname: "Najad", password: 1001, balance: 1000, transcation: [] },
@@ -11,42 +15,44 @@ database = {
 
 const register = (acno, pswd, uname) => {
 
-    if (acno in database) {
-        return {
-            statusCode: 422,
-            status: false,
-            message: "User already exist!!... Please login "
-        }
-    } else {
-        database[acno] = {
-            acno,
-            uname,
-            password: pswd,
-            balance: 0,
-            transcation: []
-        }
-        console.log(database);
+    //asynchronous
 
-        return {
-            statusCode: 200,
-            status: true,
-            message: "Successfully Registered"
+    return db.User.findOne({ acno }).then(user => {
+        if (user) {
+            return {
+                statusCode: 422,
+                status: false,
+                message: "User already exist!!... Please login "
+            }
+        } else {
+            const newUser = new db.User({
+                acno,
+                uname,
+                password: pswd,
+                balance: 0,
+                transcation: []
+            })
+            newUser.save()
+            return {
+                statusCode: 200,
+                status: true,
+                message: "Successfully Registered"
+            }
         }
-    }
+    })
 }
 
 // Login defination
 const login = (acno, password) => {
 
-    if (acno in database) {
-        if (password == database[acno]["password"]) {
+    return db.User.findOne({ acno , password }).then(user=>{
+        if(user){
             currentAcno = acno
-            currentUserName = database[acno]["uname"]
-            // token generation
-            const token = jwt.sign({
+            currentUserName = user.uname
+             // token generation
+             const token = jwt.sign({
                 currentAcno: acno
             }, 'scret123')
-            console.log(token);
             return {
                 statusCode: 200,
                 status: true,
@@ -55,20 +61,46 @@ const login = (acno, password) => {
                 currentUserName,
                 token
             }
-        } else {
+        }else{
             return {
                 statusCode: 422,
                 status: false,
                 message: "incorrect password"
             }
         }
-    } else {
-        return {
-            statusCode: 422,
-            status: false,
-            message: "Account number does not exist"
-        }
-    }
+    })
+
+    // if (acno in database) {
+    //     if (password == database[acno]["password"]) {
+    //         currentAcno = acno
+    //         currentUserName = database[acno]["uname"]
+    //         // token generation
+    //         const token = jwt.sign({
+    //             currentAcno: acno
+    //         }, 'scret123')
+    //         console.log(token);
+    //         return {
+    //             statusCode: 200,
+    //             status: true,
+    //             message: "Successfully Log In",
+    //             currentAcno,
+    //             currentUserName,
+    //             token
+    //         }
+    //     } else {
+    //         return {
+    //             statusCode: 422,
+    //             status: false,
+    //             message: "incorrect password"
+    //         }
+    //     }
+    // } else {
+    //     return {
+    //         statusCode: 422,
+    //         status: false,
+    //         message: "Account number does not exist"
+    //     }
+    // }
 }
 
 // Deposit definition

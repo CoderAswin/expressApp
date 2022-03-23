@@ -14,6 +14,8 @@ codes
 
 5. Install jsomwebtoken
 
+6. install mongoose - npm i mongoose
+
 steps
 =========
 
@@ -48,4 +50,11 @@ Then import express to this file(Insted of express we are using require)
 
     12.1 Token generation - sign()
 
-    12.2 Token validation - verify()    
+    12.2 Token validation - verify()
+
+13.promise-to deal asynchronous events
+
+    13.1 then() - resolved state
+
+    13.2 catch() - unresolved state
+
